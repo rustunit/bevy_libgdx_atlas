@@ -1,0 +1,15 @@
+[package]
+name = "bevy_libgdx_atlas"
+version = "0.1.0"
+edition = "2021"
+authors = ["Rustunit <mail@rustunit.com>"]
+
+[dependencies]
+bevy = { version = "0.13", default-features = false, features = [
+    "bevy_asset",
+    "bevy_sprite",
+] }
+thiserror = "1.0"
+
+[dev-dependencies]
+pretty_assertions = "1"
