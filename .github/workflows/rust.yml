@@ -33,8 +33,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: leafwing-studios/cargo-cache@v2
-      - name: Build
-        run: cargo build --verbose
       - name: Test
         run: cargo test --verbose
   format:
