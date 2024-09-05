@@ -8,6 +8,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
+  # Cancels in progress workflows on PRs.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
