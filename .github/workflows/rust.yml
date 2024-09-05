@@ -1,0 +1,60 @@
+name: Rust
+
+on:
+  merge_group:
+  pull_request:
+  push:
+    branches: [ "main" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  clippy:
+    name: Cargo Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: leafwing-studios/cargo-cache@v2
+      - name: Clippy
+        run: cargo clippy --verbose -Dwarnings
+  test:
+    name: Cargo Test and Build
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: leafwing-studios/cargo-cache@v2
+      - name: Build
+        run: cargo build --verbose
+      - name: Test
+        run: cargo test --verbose
+  format:
+    name: Cargo Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: leafwing-studios/cargo-cache@v2
+      - name: Check Format
+        run: cargo fmt --check
+  documentation:
+    name: Cargo Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: leafwing-studios/cargo-cache@v2
+      - name: Check Documentation
+        run: cargo doc --all-features --no-deps --document-private-items --keep-going
+      
+        
+        
