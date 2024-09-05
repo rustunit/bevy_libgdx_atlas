@@ -1,5 +1,5 @@
 //! # Bevy Libgdx Atlas
-//! 
+//!
 //! `bevy_libgdx_atlas` adds an asset loader for libGDX's atlas format with the exetension `.libgdx.atlas` to allow use of it as a [`LibGdxAtlasAsset`].
 
 mod assetformat;
