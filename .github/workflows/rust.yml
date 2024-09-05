@@ -24,7 +24,7 @@ jobs:
         with:
           sweep-cache: false
       - name: Clippy
-        run: cargo clippy --verbose -Dwarnings
+        run: cargo clippy --verbose -- -Dwarnings
   test:
     name: Cargo Test and Build
     strategy:
@@ -59,6 +59,3 @@ jobs:
       - uses: leafwing-studios/cargo-cache@v2
       - name: Check Documentation
         run: cargo doc --all-features --no-deps --document-private-items --keep-going
-      
-        
-        
