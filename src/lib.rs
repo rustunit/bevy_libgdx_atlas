@@ -35,13 +35,13 @@ impl Plugin for LibGdxAssetPlugin {
     }
 }
 
-/// This is an asset containing the texture atlas image, the texture atlas layout, and a map of the original file names to their corresponding indices in the texture atlas layout.
+/// This is an asset containing the texture atlas image, the texture atlas layout, and a map of the original file names to their corresponding indices in the texture atlas.
 #[derive(Asset, TypePath, Debug)]
 pub struct LibGdxAtlasAsset {
     /// The texture atlas image.
     pub image: Handle<Image>,
     /// The texture atlas layout.
     pub atlas: Handle<TextureAtlasLayout>,
-    /// The map of the original file names to indices of the texture atlas layout.
+    /// The map of the original file names to indices of the texture atlas.
     pub files: HashMap<String, usize>,
 }
