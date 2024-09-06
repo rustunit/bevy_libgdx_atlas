@@ -1,3 +1,9 @@
+alias c := check
+alias t := test
+alias d := doc
+alias f := format
+alias fmt := format
+
 ci: check test doc format
 
 check:
