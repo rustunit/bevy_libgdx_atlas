@@ -12,6 +12,6 @@ Check for duplicates before submitting, please.
 
 To test `bevy_libgdx_atlas` in the same way that the continuous integration does, run:
 
-`cargo clippy -Dwarnings && cargo test --verbose && cargo doc --all-features --no-deps --document-private-items --keep-going && cargo fmt --check` 
+`cargo clippy -- -Dwarnings && cargo test --verbose && cargo doc --all-features --no-deps --document-private-items --keep-going && cargo fmt --check` 
 
 This will check to be sure that your code runs, hasn't broken anything, has adequate documentation, and is formatted to our standards.
