@@ -22,7 +22,6 @@ Now when you load files with the `.libgdx.atlas` extension through the asset ser
 
 |bevy|bevy_libgdx_atlas|
 |-|-|
-|0.14|0.2|
 |0.13|0.1|
 
 ## License
