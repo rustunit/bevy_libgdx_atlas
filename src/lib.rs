@@ -1,6 +1,16 @@
 //! # Bevy Libgdx Atlas
 //!
 //! `bevy_libgdx_atlas` adds an asset loader for libGDX's atlas format with the exetension `.libgdx.atlas` to allow use of it as a [`LibGdxAtlasAsset`].
+//! 
+//! ## Usage
+//!
+//! To use, you would add the [`LibGdxAssetPlugin`] to your app:
+//!
+//! ```
+//! app.add_plugins(LibGdxAssetPlugin);
+//! ```
+//! 
+//! Now when you load files with the `.libgdx.atlas` extension through the asset server, or even `bevy_asset_loader`, they will load as a [`LibGdxAtlasAsset`] which you can then use.
 
 mod assetformat;
 mod error;
