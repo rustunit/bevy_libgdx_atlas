@@ -4,7 +4,7 @@ We happily welcome folks to contribute in some way. This document will help you 
 
 ## Reporting issues and requesting features
 
-Please report issues and request features at the relevant sections of this repository. Follow the guidelines in the issue templates for how to fill them out properly.
+Please report issues and request features at the relevant sections of this repository. For issues please state what you expected to happen, what went wrong, and any other extra info that you feel is relevant. For PRs please state the objective, how you are solving that objective with this PR, and how you have tested it / how reviewers may test it to confirm it works.
 
 Check for duplicates before submitting, please.
 
