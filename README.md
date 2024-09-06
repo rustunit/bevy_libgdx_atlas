@@ -28,3 +28,7 @@ Now when you load files with the `.libgdx.atlas` extension through the asset ser
 ## License
 
 bevy_libgdx_atlas is dual-licensed under either [MIT](https://opensource.org/license/MIT) or [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0), at your option.
+
+## Contributing
+
+[See our CONTRIBUTING.md](/CONTRIBUTING.md)
