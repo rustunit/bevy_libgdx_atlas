@@ -17,7 +17,7 @@ pub enum LibGdxAtlasAssetError {
     /// An [IO](std::io) Error that occured
     /// during parsing of a `.libgdx.atlas` file.
     #[error("Could not load asset: {0}")]
-    Io(Box<std::io::Error>),
+    Io(#[from] std::io::Error),
 
     /// A Bevy [`LoadDirectError`](bevy::asset::LoadDirectError) that occured
     /// while loading a [`LibGdxAtlasAsset::image`](crate::LibGdxAtlasAsset::image).
@@ -33,23 +33,11 @@ pub enum LibGdxAtlasAssetError {
     /// parsing the size of a `.libgdx.atlas`'s
     /// texture atlas.
     #[error("Parse Int error: {0}")]
-    ParsingInt(Box<std::num::ParseIntError>),
-}
-
-impl From<std::io::Error> for LibGdxAtlasAssetError {
-    fn from(value: std::io::Error) -> Self {
-        Self::Io(Box::new(value))
-    }
+    ParsingInt(#[from] std::num::ParseIntError),
 }
 
 impl From<bevy::asset::LoadDirectError> for LibGdxAtlasAssetError {
     fn from(value: bevy::asset::LoadDirectError) -> Self {
         Self::LoadDirect(Box::new(value))
-    }
-}
-
-impl From<std::num::ParseIntError> for LibGdxAtlasAssetError {
-    fn from(value: std::num::ParseIntError) -> Self {
-        Self::ParsingInt(Box::new(value))
     }
 }
