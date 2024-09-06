@@ -3,6 +3,12 @@ name = "bevy_libgdx_atlas"
 version = "0.1.0"
 edition = "2021"
 authors = ["Rustunit <mail@rustunit.com>"]
+description = "Support loading `libgdx.atlas` files (used for sprite sheets and such) as Bevy assets."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/rustunit/bevy_libgdx_atlas"
+readme = "README.md"
+keywords = ["bevy", "gamedev", "asset"]
+categories = ["game-development"]
 
 [dependencies]
 bevy = { version = "0.13", default-features = false, features = [
