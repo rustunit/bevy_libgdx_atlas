@@ -17,11 +17,11 @@ Now when you load files with the `.libgdx.atlas` extension through the asset ser
 
 ## Compatible Bevy Versions
 
-|Bevy|Bevy libGDX Atlas|
+|bevy|bevy_libgdx_atlas|
 |-|-|
 |0.14|0.2|
 |0.13|0.1|
 
 ## License
 
-Bevy libGDX Atlas is dual-licensed under either [MIT](https://opensource.org/license/MIT) or [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0), at your option.
+bevy_libgdx_atlas is dual-licensed under either [MIT](https://opensource.org/license/MIT) or [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0), at your option.
