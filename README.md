@@ -1,6 +1,9 @@
 # bevy_libgdx_atlas
 
 [![Following released Bevy versions](https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue)](https://bevyengine.org/learn/quick-start/plugin-development/#main-branch-tracking)
+[![crates.io](https://img.shields.io/crates/v/bevy_libgdx_atlas)](https://crates.io/crates/bevy_libgdx_atlas)
+[![docs.rs](https://docs.rs/bevy_libgdx_atlas/badge.svg)](https://docs.rs/bevy_libgdx_atlas)
+
 
 
 Support loading `libgdx.atlas` files (used for sprite sheets and such) as Bevy assets.
