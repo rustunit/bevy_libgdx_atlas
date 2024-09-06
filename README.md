@@ -13,6 +13,12 @@ Support loading `libgdx.atlas` files (used for sprite sheets and such) as Bevy a
 Add the `LibGdxAssetPlugin` to your app:
 
 ```rust
+use bevy::prelude::*;
+use bevy_libgdx_atlas::*;
+
+let app = App::new();
+app.add_plugins(MinimalPlugins);
+app.add_plugins(AssetPlugin::default());
 app.add_plugins(LibGdxAssetPlugin);
 ```
 
