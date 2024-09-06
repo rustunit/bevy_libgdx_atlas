@@ -39,7 +39,6 @@ bevy_libgdx_atlas is dual-licensed under either [MIT](https://opensource.org/lic
 
 ## Our Other Crates
 
-See:
 - [bevy_device_lang](https://github.com/rustunit/bevy_device_lang)
 - [bevy_ios_review](https://github.com/rustunit/bevy_ios_review)
 - [bevy_ios_impact](https://github.com/rustunit/bevy_ios_impact)
