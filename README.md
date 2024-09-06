@@ -4,7 +4,15 @@
 [![crates.io](https://img.shields.io/crates/v/bevy_libgdx_atlas)](https://crates.io/crates/bevy_libgdx_atlas)
 [![docs.rs](https://docs.rs/bevy_libgdx_atlas/badge.svg)](https://docs.rs/bevy_libgdx_atlas)
 
-
+See our other crates:
+- [bevy_device_lang](https://github.com/rustunit/bevy_device_lang)
+- [bevy_ios_review](https://github.com/rustunit/bevy_ios_review)
+- [bevy_ios_impact](https://github.com/rustunit/bevy_ios_impact)
+- [bevy_ios_alerts](https://github.com/rustunit/bevy_ios_alerts)
+- [bevy_ios_iap](https://github.com/rustunit/bevy_ios_iap)
+- [bevy_ios_notifications](https://github.com/rustunit/bevy_ios_notifications)
+- [bevy_ios_gamecenter](https://github.com/rustunit/bevy_ios_gamecenter)
+- [bevy_web_popups](https://github.com/rustunit/bevy_web_popups)
 
 Support loading `libgdx.atlas` files (used for sprite sheets and such) as Bevy assets.
 
@@ -23,16 +31,6 @@ app.add_plugins(LibGdxAssetPlugin);
 ```
 
 Now when you load files with the `.libgdx.atlas` extension through the asset server, or even `bevy_asset_loader`, they will load as a `LibGdxAtlasAsset` which you can then use.
-
-See our other crates:
-- [bevy_device_lang](https://github.com/rustunit/bevy_device_lang)
-- [bevy_ios_review](https://github.com/rustunit/bevy_ios_review)
-- [bevy_ios_impact](https://github.com/rustunit/bevy_ios_impact)
-- [bevy_ios_alerts](https://github.com/rustunit/bevy_ios_alerts)
-- [bevy_ios_iap](https://github.com/rustunit/bevy_ios_iap)
-- [bevy_ios_notifications](https://github.com/rustunit/bevy_ios_notifications)
-- [bevy_ios_gamecenter](https://github.com/rustunit/bevy_ios_gamecenter)
-- [bevy_web_popups](https://github.com/rustunit/bevy_web_popups)
 
 ## Compatible Bevy Versions
 
