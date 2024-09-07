@@ -18,7 +18,6 @@ pub struct AssetFile {
 }
 
 impl AssetFile {
-    #[allow(clippy::result_large_err)]
     pub fn new(content: String) -> Result<Self, LibGdxAtlasAssetError> {
         let mut lines = content.lines();
         let file: PathBuf = lines
@@ -64,7 +63,6 @@ impl AssetFile {
     }
 }
 
-#[allow(clippy::result_large_err)]
 fn parse_size(size: String) -> Result<IVec2, LibGdxAtlasAssetError> {
     if !size.starts_with("size:") {
         return Err(LibGdxAtlasAssetError::ParsingError(
@@ -84,7 +82,6 @@ fn parse_size(size: String) -> Result<IVec2, LibGdxAtlasAssetError> {
     Ok(IVec2::new(w as i32, h as i32))
 }
 
-#[allow(clippy::result_large_err)]
 fn parse_bounds(size: String) -> Result<Rect, LibGdxAtlasAssetError> {
     if !size.starts_with("bounds:") {
         return Err(LibGdxAtlasAssetError::ParsingError(
