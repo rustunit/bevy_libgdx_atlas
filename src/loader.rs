@@ -29,11 +29,11 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
         let asset = AssetFile::new(file)?;
 
         let path = load_context
-                    .asset_path()
-                    .path()
-                    .parent()
-                    .unwrap()
-                    .join(asset.file);
+            .asset_path()
+            .path()
+            .parent()
+            .unwrap()
+            .join(asset.file);
 
         let image: Image = load_context
             .loader()
