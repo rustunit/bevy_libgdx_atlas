@@ -29,6 +29,9 @@ Now when you load files with the `.libgdx.atlas` extension through the asset ser
 
 <img src="animated_spritesheet_example.webp" width="800" height="450" alt="Animated spritesheet example" />
 
+> [!TIP]
+> Run `cargo run --example animation` to see this example for yourself!
+
 ## Contributing
 
 [See our CONTRIBUTING.md](/CONTRIBUTING.md)
