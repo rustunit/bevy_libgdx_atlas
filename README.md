@@ -11,7 +11,7 @@ Support loading `libgdx.atlas` files (used for sprite sheets and such) as Bevy a
 
 Pack your spritesheet using https://github.com/crashinvaders/gdx-texture-packer-gui
 
-[!texture packer example](texture_packer_example.webp)
+<img src="texture_packer_example.webp" width="800" height="450" alt="Texture packer example" />
 
 Add the `LibGdxAssetPlugin` to your app:
 
@@ -27,7 +27,7 @@ app.add_plugins(LibGdxAssetPlugin);
 
 Now when you load files with the `.libgdx.atlas` extension through the asset server, or even `bevy_asset_loader`, they will load as a `LibGdxAtlasAsset` which you can then use.
 
-[!animated spritesheet example](animated_spritesheet_example.webp)
+<img src="animated_spritesheet_example.webp" width="800" height="450" alt="Animated spritesheet example" />
 
 ## Contributing
 
