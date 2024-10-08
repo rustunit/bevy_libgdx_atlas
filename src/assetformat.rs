@@ -70,10 +70,12 @@ fn parse_size(size: String) -> Result<IVec2, LibGdxAtlasAssetError> {
         ));
     }
 
-    let colon = size.find(':').expect("no colon found");
+    let colon = size.find(':').ok_or(LibGdxAtlasAssetError::ParsingError(
+        "expected symbol: ':'".to_string(),
+    ))?;
 
     let comma = size.find(',').ok_or(LibGdxAtlasAssetError::ParsingError(
-        "expected symbol: 'x'".into(),
+        "expected symbol: 'x'".to_string(),
     ))?;
 
     let w = size[colon.saturating_add(1)..comma].parse::<u32>()?;
@@ -85,11 +87,13 @@ fn parse_size(size: String) -> Result<IVec2, LibGdxAtlasAssetError> {
 fn parse_bounds(size: String) -> Result<Rect, LibGdxAtlasAssetError> {
     if !size.starts_with("bounds:") {
         return Err(LibGdxAtlasAssetError::ParsingError(
-            "expected: 'bounds:'".into(),
+            "expected: 'bounds:'".to_string(),
         ));
     }
 
-    let colon = size.find(':').expect("no colon found");
+    let colon = size.find(':').ok_or(LibGdxAtlasAssetError::ParsingError(
+        "expected symbol: ':'".to_string(),
+    ))?;
 
     let mut values = size[colon.saturating_add(1)..].split(',');
 
@@ -113,6 +117,7 @@ fn parse_bounds(size: String) -> Result<Rect, LibGdxAtlasAssetError> {
     Ok(Rect::new(x as f32, y as f32, x2 as f32, y2 as f32))
 }
 
+#[allow(clippy::unwrap_used)]
 #[cfg(test)]
 mod test {
     use super::*;

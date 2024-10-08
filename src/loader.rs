@@ -32,7 +32,9 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
             .asset_path()
             .path()
             .parent()
-            .unwrap()
+            .ok_or(LibGdxAtlasAssetError::LoadingImageAsset(
+                "can't find parent folder common to atlas and image asset".to_string(),
+            ))?
             .join(asset.file);
 
         let image: Image = load_context
@@ -42,7 +44,9 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
             .load(path)
             .await?
             .take()
-            .expect("expected image asset");
+            .ok_or(LibGdxAtlasAssetError::LoadingImageAsset(
+                "failed to load image asset, does it exist".to_string(),
+            ))?;
 
         let mut layout = TextureAtlasLayout::new_empty(asset.size.as_uvec2());
         let mut files = HashMap::new();
