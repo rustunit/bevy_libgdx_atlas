@@ -117,6 +117,7 @@ fn parse_bounds(size: String) -> Result<Rect, LibGdxAtlasAssetError> {
     Ok(Rect::new(x as f32, y as f32, x2 as f32, y2 as f32))
 }
 
+#[allow(clippy::unwrap_used)]
 #[cfg(test)]
 mod test {
     use super::*;
@@ -125,14 +126,12 @@ mod test {
 
     #[test]
     fn test_parse_size() {
-        #[allow(clippy::unwrap_used)]
         let size = parse_size("size:12,14".into()).unwrap();
         assert_eq!(size, IVec2::new(12, 14));
     }
 
     #[test]
     fn test_parse_bounds() {
-        #[allow(clippy::unwrap_used)]
         let size = parse_bounds("bounds:1,2,10,20".into()).unwrap();
         assert_eq!(size, Rect::new(1., 2., 11., 22.));
     }
