@@ -10,6 +10,14 @@ readme = "README.md"
 keywords = ["bevy", "gamedev", "asset"]
 categories = ["game-development"]
 
+[lints]
+workspace = true
+
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+
 [dependencies]
 bevy = { version = "0.14", default-features = false, features = [
     "bevy_asset",

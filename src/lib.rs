@@ -18,8 +18,6 @@
 //!
 //! Now when you load files with the `.libgdx.atlas` extension through the asset server, or even `bevy_asset_loader`, they will load as a [`LibGdxAtlasAsset`] which you can then use.
 
-#![deny(clippy::unwrap_used, clippy::panic, clippy::expect_used)]
-
 mod assetformat;
 mod error;
 mod loader;
