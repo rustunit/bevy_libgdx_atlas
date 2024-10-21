@@ -7,7 +7,7 @@
 
 Support loading `libgdx.atlas` files (used for sprite sheets and such) as Bevy assets.
 
-Read the article with more context around sprite atlases on the [rustunit blog](https://rustunit.com/blog/2024/10-21-bevy-libgdx-atlas/).
+Read the article with more context around sprite atlases in Bevy on the [rustunit blog](https://rustunit.com/blog/2024/10-21-bevy-libgdx-atlas/).
 
 ## Usage
 
