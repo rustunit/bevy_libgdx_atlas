@@ -17,11 +17,11 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
         &["libgdx.atlas"]
     }
 
-    async fn load<'a>(
-        &'a self,
-        reader: &'a mut bevy::asset::io::Reader<'_>,
-        _settings: &'a Self::Settings,
-        load_context: &'a mut bevy::asset::LoadContext<'_>,
+    async fn load(
+        &self,
+        reader: &mut dyn bevy::asset::io::Reader,
+        _settings: &(),
+        load_context: &mut bevy::asset::LoadContext<'_>,
     ) -> Result<Self::Asset, Self::Error> {
         let mut file = String::new();
         reader.read_to_string(&mut file).await?;
@@ -39,8 +39,8 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
 
         let image: Image = load_context
             .loader()
-            .direct()
-            .untyped()
+            .immediate()
+            .with_unknown_type()
             .load(path)
             .await?
             .take()

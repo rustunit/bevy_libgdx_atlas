@@ -19,9 +19,10 @@ expect_used = "deny"
 panic = "deny"
 
 [dependencies]
-bevy = { version = "0.14", default-features = false, features = [
+bevy = { version = "0.15", default-features = false, features = [
     "bevy_asset",
     "bevy_sprite",
+    "basis-universal",
 ] }
 thiserror = "1.0"
 
