@@ -28,4 +28,4 @@ thiserror = "1.0"
 
 [dev-dependencies]
 pretty_assertions = "1"
-bevy = "*"
+bevy = "0.15"
