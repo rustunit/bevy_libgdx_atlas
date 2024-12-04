@@ -68,13 +68,13 @@ fn setup(
     };
 
     commands.spawn((
-        SpriteBundle {
-            texture: animation_sheet.image.clone(),
+        Sprite {
+            image: animation_sheet.image.clone(),
+            texture_atlas: Some(TextureAtlas {
+                layout: animation_sheet.atlas.clone(),
+                index: 0,
+            }),
             ..default()
-        },
-        TextureAtlas {
-            layout: animation_sheet.atlas.clone(),
-            index: 0,
         },
         AnimationConfig {
             first_index: 0,
@@ -83,12 +83,12 @@ fn setup(
         },
     ));
 
-    let mut camera = Camera2dBundle::default();
-    camera.projection.scaling_mode = ScalingMode::Fixed {
+    let mut projection = OrthographicProjection::default_2d();
+    projection.scaling_mode = ScalingMode::Fixed {
         width: 16.,
         height: 16.,
     };
-    commands.spawn(camera);
+    commands.spawn((Camera2d, projection));
 }
 
 #[derive(Component)]
@@ -98,8 +98,11 @@ struct AnimationConfig {
     timer: Timer,
 }
 
-fn animate_sheet(time: Res<Time>, mut query: Query<(&mut AnimationConfig, &mut TextureAtlas)>) {
-    for (mut config, mut atlas) in &mut query {
+fn animate_sheet(time: Res<Time>, mut query: Query<(&mut AnimationConfig, &mut Sprite)>) {
+    for (mut config, mut sprite) in &mut query {
+        let Some(texture_atlas) = &mut sprite.texture_atlas else {
+            continue;
+        };
         config.timer.tick(time.delta());
 
         // Early return if it isn't time for the next
@@ -110,10 +113,10 @@ fn animate_sheet(time: Res<Time>, mut query: Query<(&mut AnimationConfig, &mut T
 
         // Restart the animation to the first index if
         // it has reached the last index.
-        atlas.index = if atlas.index == config.last_index {
+        texture_atlas.index = if texture_atlas.index == config.last_index {
             config.first_index
         } else {
-            atlas.index + 1
+            texture_atlas.index + 1
         };
     }
 }
