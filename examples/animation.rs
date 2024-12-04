@@ -63,7 +63,9 @@ fn setup(
     atlases: Res<Assets<LibGdxAtlasAsset>>,
 ) {
     // Get the LibGDX atlas asset for however we wish to use it.
-    let animation_sheet = atlases.get(&handle.0).unwrap();
+    let Some(animation_sheet) = atlases.get(&handle.0) else {
+        return;
+    };
 
     commands.spawn((
         SpriteBundle {

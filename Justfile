@@ -7,10 +7,13 @@ alias fmt := format
 default:
     just --list
 
-ci: check test doc format
+ci: build check test doc format
+
+build:
+    cargo b --all-targets
 
 check:
-    cargo clippy -- -Dwarnings
+    cargo clippy --all-targets -- -Dwarnings
 
 test:
     cargo test
