@@ -43,6 +43,7 @@ Now when you load files with the `.libgdx.atlas` extension through the asset ser
 
 ## Our Other Crates
 
+- [bevy_debug_log](https://github.com/rustunit/bevy_debug_log)
 - [bevy_device_lang](https://github.com/rustunit/bevy_device_lang)
 - [bevy_ios_review](https://github.com/rustunit/bevy_ios_review)
 - [bevy_ios_impact](https://github.com/rustunit/bevy_ios_impact)
