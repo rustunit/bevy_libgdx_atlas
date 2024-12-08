@@ -1,6 +1,6 @@
 [package]
 name = "bevy_libgdx_atlas"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 authors = ["Rustunit <mail@rustunit.com>"]
 description = "Support loading `libgdx.atlas` files (used for sprite sheets and such) as Bevy assets."
@@ -22,7 +22,7 @@ panic = "deny"
 bevy = { version = "0.15", default-features = false, features = [
     "bevy_asset",
     "bevy_sprite",
-    "basis-universal",
+    "png",
 ] }
 thiserror = "1.0"
 
