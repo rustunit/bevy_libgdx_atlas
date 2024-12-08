@@ -22,7 +22,7 @@ panic = "deny"
 bevy = { version = "0.15", default-features = false, features = [
     "bevy_asset",
     "bevy_sprite",
-    "basis-universal",
+    "png",
 ] }
 thiserror = "1.0"
 
