@@ -23,3 +23,6 @@ doc:
 
 format:
     cargo fmt --check
+
+example:
+    cargo run --example animation
