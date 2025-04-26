@@ -1,7 +1,7 @@
 use bevy::{
     asset::{AssetLoader, AsyncReadExt},
+    platform::collections::HashMap,
     prelude::*,
-    utils::HashMap,
 };
 
 use crate::{assetformat::AssetFile, LibGdxAtlasAsset, LibGdxAtlasAssetError};

@@ -88,7 +88,7 @@ fn setup(
         width: 16.,
         height: 16.,
     };
-    commands.spawn((Camera2d, projection));
+    commands.spawn((Camera2d, Projection::Orthographic(projection)));
 }
 
 #[derive(Component)]
