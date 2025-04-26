@@ -4,7 +4,7 @@ use bevy::{
     prelude::*,
 };
 
-use crate::{assetformat::AssetFile, LibGdxAtlasAsset, LibGdxAtlasAssetError};
+use crate::{LibGdxAtlasAsset, LibGdxAtlasAssetError, assetformat::AssetFile};
 
 #[derive(Default)]
 pub struct LibGdxAtlasAssetLoader;
