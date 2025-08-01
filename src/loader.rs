@@ -1,5 +1,5 @@
 use bevy::{
-    asset::{AssetLoader, AsyncReadExt},
+    asset::{AssetLoader, AssetPath, AsyncReadExt},
     platform::collections::HashMap,
     prelude::*,
 };
@@ -28,20 +28,26 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
 
         let asset = AssetFile::new(file)?;
 
-        let path = load_context
+        let source = load_context
+            .asset_path()
+            .source()
+            .clone_owned();
+
+        let path: AssetPath = load_context
             .asset_path()
             .path()
             .parent()
             .ok_or(LibGdxAtlasAssetError::LoadingImageAsset(
                 "can't find parent folder common to atlas and image asset".to_string(),
             ))?
-            .join(asset.file);
+            .join(asset.file)
+            .into();
 
         let image: Image = load_context
             .loader()
             .immediate()
             .with_unknown_type()
-            .load(path)
+            .load(path.with_source(source))
             .await?
             .take()
             .ok_or(LibGdxAtlasAssetError::LoadingImageAsset(
