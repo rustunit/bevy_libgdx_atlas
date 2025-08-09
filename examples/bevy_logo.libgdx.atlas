@@ -1,0 +1,7 @@
+bevy_logo.libgdx.png
+size:20,30
+repeat:none
+bevy_pixel_dark
+bounds:2,2,16,12
+bevy_pixel_light
+bounds:2,16,16,12
