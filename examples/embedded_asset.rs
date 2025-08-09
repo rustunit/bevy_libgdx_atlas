@@ -23,20 +23,20 @@ fn main(){
 
 
 #[derive(Resource, Default, Debug)]
-struct LogHandle(Handle<LibGdxAtlasAsset>);
+struct LogoHandle(Handle<LibGdxAtlasAsset>);
 
 fn setup(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ){
     // Add "embedded://" prefix to declare asset source. 
-    commands.insert_resource(LogHandle(asset_server.load("embedded://embedded_asset/bevy_logo.libgdx.atlas")));
+    commands.insert_resource(LogoHandle(asset_server.load("embedded://embedded_asset/bevy_logo.libgdx.atlas")));
     commands.spawn(Camera2d);
 }
 
 fn spawn_sprite(
     atlases: Res<Assets<LibGdxAtlasAsset>>,
-    handle: Res<LogHandle>,
+    handle: Res<LogoHandle>,
     mut commands: Commands,
     mut is_ran: Local<bool>,
 ){
