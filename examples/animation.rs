@@ -1,4 +1,4 @@
-use bevy::{prelude::*, render::camera::ScalingMode, window::WindowResolution};
+use bevy::{prelude::*, window::WindowResolution};
 use bevy_libgdx_atlas::*;
 
 fn main() {
@@ -9,7 +9,7 @@ fn main() {
                 primary_window: Some(Window {
                     title: "Bevy LibGDX Atlas Animation Example".to_string(),
                     // So that the resolution matches the sprites aspect ratio.
-                    resolution: WindowResolution::new(512., 512.),
+                    resolution: WindowResolution::new(512, 512),
                     ..default()
                 }),
                 ..default()
@@ -84,7 +84,7 @@ fn setup(
     ));
 
     let mut projection = OrthographicProjection::default_2d();
-    projection.scaling_mode = ScalingMode::Fixed {
+    projection.scaling_mode = bevy::camera::ScalingMode::Fixed {
         width: 16.,
         height: 16.,
     };
