@@ -37,6 +37,8 @@ Now when you load files with the `.libgdx.atlas` extension through the asset ser
 > [!TIP]
 > Run `cargo run --example animation` to see this example for yourself!
 
+Additionally, `AssetSource` are also supported (such as embedded assets) — just make sure that the `.libgdx.atlas` and `.png` files are located in the same path.
+
 ## Contributing
 
 [See our CONTRIBUTING.md](/CONTRIBUTING.md)
