@@ -19,10 +19,14 @@ expect_used = "deny"
 panic = "deny"
 
 [dependencies]
-bevy = { version = "0.18", default-features = false, features = [
-    "bevy_asset",
-    "bevy_camera"
-] }
+bevy_camera = { version = "0.18", default-features = false }
+bevy_asset = { version = "0.18", default-features = false }
+bevy_ecs = { version = "0.18", default-features = false }
+bevy_reflect = { version = "0.18", default-features = false }
+bevy_image = { version = "0.18", default-features = false }
+bevy_platform = { version = "0.18", default-features = false }
+bevy_math = { version = "0.18", default-features = false }
+bevy_app = { version = "0.18", default-features = false }
 bevy_internal = { version = "0.18", features = ["bevy_image"] }
 thiserror = "1.0"
 

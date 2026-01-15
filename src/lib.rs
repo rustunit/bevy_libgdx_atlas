@@ -22,7 +22,11 @@ mod assetformat;
 mod error;
 mod loader;
 
-use bevy::{platform::collections::HashMap, prelude::*};
+use bevy_app::prelude::*;
+use bevy_asset::prelude::*;
+use bevy_image::prelude::*;
+use bevy_platform::{collections::HashMap, prelude::*};
+use bevy_reflect::prelude::*;
 pub use error::LibGdxAtlasAssetError;
 use loader::LibGdxAtlasAssetLoader;
 

@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
-use bevy::prelude::*;
+use bevy_internal::prelude::Rect;
+use bevy_math::prelude::*;
 
 use crate::LibGdxAtlasAssetError;
 

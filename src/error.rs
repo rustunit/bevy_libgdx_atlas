@@ -22,7 +22,7 @@ pub enum LibGdxAtlasAssetError {
     /// A Bevy [`LoadDirectError`](bevy::asset::LoadDirectError) that occured
     /// while loading a [`LibGdxAtlasAsset::image`](crate::LibGdxAtlasAsset::image).
     #[error("could not load asset: {0}")]
-    LoadDirect(Box<bevy::asset::LoadDirectError>),
+    LoadDirect(Box<bevy_asset::LoadDirectError>),
 
     /// An error that occurs when parsing the
     /// content of a `.libgdx.atlas` file.
@@ -42,8 +42,8 @@ pub enum LibGdxAtlasAssetError {
     LoadingImageAsset(String),
 }
 
-impl From<bevy::asset::LoadDirectError> for LibGdxAtlasAssetError {
-    fn from(value: bevy::asset::LoadDirectError) -> Self {
+impl From<bevy_asset::LoadDirectError> for LibGdxAtlasAssetError {
+    fn from(value: bevy_asset::LoadDirectError) -> Self {
         Self::LoadDirect(Box::new(value))
     }
 }

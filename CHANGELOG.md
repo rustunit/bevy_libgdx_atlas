@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 * upgrade to bevy `0.18`
+* switch to granular `bevy_*` dependencies
 
 ## [0.5.0] - 2024-11-15
 

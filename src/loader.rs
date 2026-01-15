@@ -1,8 +1,7 @@
-use bevy::{
-    asset::{AssetLoader, AsyncReadExt},
-    platform::collections::HashMap,
-    prelude::*,
-};
+use bevy_asset::{AssetLoader, AsyncReadExt};
+use bevy_image::prelude::*;
+use bevy_platform::{collections::HashMap, prelude::*};
+use bevy_reflect::prelude::*;
 
 use crate::{LibGdxAtlasAsset, LibGdxAtlasAssetError, assetformat::AssetFile};
 
@@ -20,9 +19,9 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
 
     async fn load(
         &self,
-        reader: &mut dyn bevy::asset::io::Reader,
+        reader: &mut dyn bevy_asset::io::Reader,
         _settings: &(),
-        load_context: &mut bevy::asset::LoadContext<'_>,
+        load_context: &mut bevy_asset::LoadContext<'_>,
     ) -> Result<Self::Asset, Self::Error> {
         let mut file = String::new();
         reader.read_to_string(&mut file).await?;
