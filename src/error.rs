@@ -19,7 +19,7 @@ pub enum LibGdxAtlasAssetError {
     #[error("could not load asset: {0}")]
     Io(#[from] std::io::Error),
 
-    /// A Bevy [`LoadDirectError`](bevy::asset::LoadDirectError) that occured
+    /// A Bevy [`LoadDirectError`](bevy_asset::LoadDirectError) that occured
     /// while loading a [`LibGdxAtlasAsset::image`](crate::LibGdxAtlasAsset::image).
     #[error("could not load asset: {0}")]
     LoadDirect(Box<bevy_asset::LoadDirectError>),
