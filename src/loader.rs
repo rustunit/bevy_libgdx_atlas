@@ -6,8 +6,9 @@ use bevy::{
 
 use crate::{LibGdxAtlasAsset, LibGdxAtlasAssetError, assetformat::AssetFile};
 
-#[derive(Default)]
+#[derive(Default, TypePath)]
 pub struct LibGdxAtlasAssetLoader;
+
 impl AssetLoader for LibGdxAtlasAssetLoader {
     type Asset = LibGdxAtlasAsset;
     type Settings = ();
@@ -29,7 +30,7 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
         let asset = AssetFile::new(file)?;
 
         let path = load_context
-            .asset_path()
+            .path()
             .path()
             .parent()
             .ok_or(LibGdxAtlasAssetError::LoadingImageAsset(

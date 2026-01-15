@@ -58,7 +58,8 @@ Now when you load files with the `.libgdx.atlas` extension through the asset ser
 
 |bevy|crate|
 |-|-|
-|0.17|0.5,main|
+|0.18|0.6,main|
+|0.17|0.5|
 |0.16|0.4|
 |0.15|0.3|
 |0.14|0.2|
