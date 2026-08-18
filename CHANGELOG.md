@@ -7,16 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.7.0] - 2026-08-18
+
+### Changed
+* upgrade to bevy `0.19`
+
+## [0.6.0] - 2026-01-15
+
 ### Changed
 * upgrade to bevy `0.18`
 * switch to granular `bevy_*` dependencies
 
-## [0.5.0] - 2024-11-15
+## [0.5.0] - 2025-11-15
 
 ### Changed
 * upgrade to bevy `0.17`
 
-## [0.4.2] - 2024-04-26
+## [0.4.0] - 2025-04-26
 
 ### Changed
 * upgrade to bevy `0.16`
