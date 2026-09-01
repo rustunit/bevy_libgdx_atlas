@@ -41,26 +41,28 @@ impl Plugin for LibGdxAssetPlugin {
     fn build(&self, app: &mut App) {
         app.init_asset::<LibGdxAtlasAsset>();
         app.init_asset_loader::<LibGdxAtlasAssetLoader>();
+        app.register_type::<LibGdxAtlasAsset>();
     }
 }
 
 /// This is an asset containing the texture atlas image, the texture atlas layout, and a map of the original file names to their corresponding indices in the texture atlas.
-#[derive(Asset, TypePath, Debug)]
+#[derive(Asset, Reflect, Debug)]
+#[reflect(Debug)]
 pub struct LibGdxAtlasAsset {
     /// The texture atlas image.
     pub image: Handle<Image>,
     /// The texture atlas layout.
     pub atlas: Handle<TextureAtlasLayout>,
-    /// The map of the original file names to indices of the texture atlas.
+    /// The map of region names to indices of the texture atlas.
     ///
     /// Indices are in packer order, not name order: use [`Self::frames`] for animations.
-    pub files: HashMap<String, usize>,
+    pub regions: HashMap<String, usize>,
 }
 
 impl LibGdxAtlasAsset {
     /// Index of the region `name` inside [`Self::atlas`].
     pub fn index(&self, name: &str) -> Option<usize> {
-        self.files.get(name).copied()
+        self.regions.get(name).copied()
     }
 
     /// [`TextureAtlas`] selecting the region `name`, for a `Sprite` or `ImageNode`.
@@ -90,15 +92,15 @@ impl LibGdxAtlasAsset {
 
     /// All region names, in unspecified order.
     pub fn names(&self) -> impl Iterator<Item = &str> {
-        self.files.keys().map(String::as_str)
+        self.regions.keys().map(String::as_str)
     }
 
     /// Indices of the regions named `prefix*`, ordered by name: an animation's frames.
     ///
-    /// `""` yields the whole atlas. Unlike [`Self::files`], the order is not packer order.
+    /// `""` yields the whole atlas. Unlike [`Self::regions`], the order is not packer order.
     pub fn frames(&self, prefix: &str) -> Vec<usize> {
         let mut regions: Vec<(&str, usize)> = self
-            .files
+            .regions
             .iter()
             .filter(|(name, _)| name.starts_with(prefix))
             .map(|(name, index)| (name.as_str(), *index))
@@ -128,7 +130,7 @@ mod test {
         LibGdxAtlasAsset {
             image: Handle::default(),
             atlas: Handle::default(),
-            files: regions
+            regions: regions
                 .iter()
                 .map(|(name, index)| ((*name).to_string(), *index))
                 .collect(),

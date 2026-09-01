@@ -50,7 +50,7 @@ let frames: Vec<usize> = atlas.frames("hero_");
 ```
 
 > [!WARNING]
-> The raw indices in `LibGdxAtlasAsset::files` follow the order the packer wrote the
+> The raw indices in `LibGdxAtlasAsset::regions` follow the order the packer wrote the
 > regions in, which is neither name order nor stable across repacks. Use `frames()`
 > to drive an animation.
 

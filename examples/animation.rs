@@ -72,7 +72,7 @@ fn setup(
     commands.spawn((
         animation_sheet.sprite("tile007").unwrap(),
         AnimationConfig {
-            // In name order, unlike the raw indices in `files`.
+            // In name order, unlike the raw indices in `regions`.
             frames: animation_sheet.frames("tile"),
             current: 0,
             timer: Timer::from_seconds(0.1, TimerMode::Repeating),

@@ -24,15 +24,12 @@ default = ["sprite"]
 sprite = ["dep:bevy_sprite"]
 
 [dependencies]
-bevy_camera = { version = "0.19", default-features = false }
 bevy_asset = { version = "0.19", default-features = false }
-bevy_ecs = { version = "0.19", default-features = false }
 bevy_reflect = { version = "0.19", default-features = false }
 bevy_image = { version = "0.19", default-features = false }
 bevy_platform = { version = "0.19", default-features = false }
 bevy_math = { version = "0.19", default-features = false }
-bevy_app = { version = "0.19", default-features = false }
-bevy_internal = { version = "0.19", features = ["bevy_image"] }
+bevy_app = { version = "0.19", default-features = false, features = ["bevy_reflect"] }
 bevy_sprite = { version = "0.19", default-features = false, optional = true }
 thiserror = "2.0"
 

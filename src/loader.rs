@@ -47,11 +47,11 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
             ))?;
 
         let mut layout = TextureAtlasLayout::new_empty(asset.size);
-        let mut files = HashMap::new();
+        let mut regions = HashMap::new();
 
-        for frame in asset.files {
-            let id = layout.add_texture(frame.bounds);
-            files.insert(frame.filename, id);
+        for region in asset.regions {
+            let id = layout.add_texture(region.bounds);
+            regions.insert(region.name, id);
         }
 
         let atlas = load_context.add_labeled_asset("atlas_layout", layout);
@@ -60,7 +60,7 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
         Ok(LibGdxAtlasAsset {
             image,
             atlas,
-            files,
+            regions,
         })
     }
 }

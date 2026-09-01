@@ -5,8 +5,8 @@ use bevy_math::prelude::*;
 use crate::LibGdxAtlasAssetError;
 
 #[derive(Debug)]
-pub struct AssetFileFrame {
-    pub filename: String,
+pub struct AssetFileRegion {
+    pub name: String,
     pub bounds: URect,
 }
 
@@ -14,7 +14,7 @@ pub struct AssetFileFrame {
 pub struct AssetFile {
     pub file: PathBuf,
     pub size: UVec2,
-    pub files: Vec<AssetFileFrame>,
+    pub regions: Vec<AssetFileRegion>,
 }
 
 impl AssetFile {
@@ -42,7 +42,7 @@ impl AssetFile {
         }
         let size = size.ok_or_else(|| parsing("not found: size"))?;
 
-        let mut files = Vec::new();
+        let mut regions = Vec::new();
         while let Some(name) = lines.next() {
             if name.is_empty() {
                 // A blank line starts the next page, and we can hold only one image.
@@ -52,17 +52,21 @@ impl AssetFile {
                 break;
             }
 
-            files.push(parse_region(name, &mut lines)?);
+            regions.push(parse_region(name, &mut lines)?);
         }
 
-        Ok(Self { file, size, files })
+        Ok(Self {
+            file,
+            size,
+            regions,
+        })
     }
 }
 
 fn parse_region<'a>(
     name: &str,
     lines: &mut Peekable<impl Iterator<Item = &'a str>>,
-) -> Result<AssetFileFrame, LibGdxAtlasAssetError> {
+) -> Result<AssetFileRegion, LibGdxAtlasAssetError> {
     let (mut bounds, mut xy, mut size) = (None, None, None);
 
     while let Some(line) = lines.peek().copied() {
@@ -91,8 +95,8 @@ fn parse_region<'a>(
         _ => return Err(parsing(format!("not found: bounds of region '{name}'"))),
     };
 
-    Ok(AssetFileFrame {
-        filename: name.to_string(),
+    Ok(AssetFileRegion {
+        name: name.to_string(),
         bounds,
     })
 }
@@ -181,9 +185,9 @@ tile007
 
             assert_eq!(atlas.file, PathBuf::from("sheet.png"));
             assert_eq!(atlas.size, UVec2::new(128, 32));
-            assert_eq!(atlas.files.len(), 1);
-            assert_eq!(atlas.files[0].filename, "tile007");
-            assert_eq!(atlas.files[0].bounds, URect::new(92, 2, 108, 18));
+            assert_eq!(atlas.regions.len(), 1);
+            assert_eq!(atlas.regions[0].name, "tile007");
+            assert_eq!(atlas.regions[0].bounds, URect::new(92, 2, 108, 18));
         }
     }
 
@@ -192,13 +196,13 @@ tile007
         let atlas =
             parse("sheet.png\nsize:4,4\nrepeat:none\na\nbounds:0,0,1,1\nb\nbounds:1,0,1,1\n");
 
-        assert_eq!(atlas.files.len(), 2);
-        assert_eq!(atlas.files[1].filename, "b");
+        assert_eq!(atlas.regions.len(), 2);
+        assert_eq!(atlas.regions[1].name, "b");
     }
 
     #[test]
     fn test_ignores_trailing_blank_lines() {
-        assert_eq!(parse(&format!("{COMPACT}\n\n")).files.len(), 1);
+        assert_eq!(parse(&format!("{COMPACT}\n\n")).regions.len(), 1);
     }
 
     #[test]
@@ -242,7 +246,7 @@ tile007
     fn test_parses_the_bundled_example_asset() {
         let atlas = parse(include_str!("../assets/animation_sheet.libgdx.atlas"));
 
-        assert_eq!(atlas.files.len(), 7);
+        assert_eq!(atlas.regions.len(), 7);
     }
 
     #[test]
