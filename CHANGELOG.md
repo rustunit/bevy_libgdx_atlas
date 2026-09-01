@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `LibGdxAtlasAsset::index`, `::texture_atlas` and `::names` to look regions up by their atlas name
 * `LibGdxAtlasAsset::sprite` returning a ready-to-spawn `Sprite`, behind the new default-on `sprite` feature
 * `LibGdxAtlasAsset::frames` returning an animation's frame indices in name order, with trailing numbers sorted numerically (`hero_2` before `hero_10`)
+* `LibGdxAtlasAsset::image_node` returning a ready-to-spawn `ImageNode`, behind the new default-on `ui` feature
+* `LibGdxAtlasAsset::apply` pointing an existing `Sprite`'s or `ImageNode`'s `texture_atlas` at another region
 
 ### Changed
 * renamed `LibGdxAtlasAsset::files` to `::regions`, which is what libGDX calls them

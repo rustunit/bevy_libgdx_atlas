@@ -19,8 +19,7 @@ pub struct AssetFile {
 
 impl AssetFile {
     pub fn new(content: String) -> Result<Self, LibGdxAtlasAssetError> {
-        // Whitespace is insignificant: libGDX indents region properties and writes
-        // `size: 1, 2`, while other packers write neither.
+        // libGDX indents properties and writes `size: 1, 2`; other packers do neither.
         let mut lines = content.lines().map(str::trim).peekable();
 
         let file: PathBuf = lines
@@ -101,8 +100,7 @@ fn parse_region<'a>(
     })
 }
 
-/// Splits a `key: value` line. Region names carry no colon, so this also tells a
-/// property apart from the name starting the next region.
+/// Splits a `key: value` line; region names carry no colon.
 fn property(line: &str) -> Option<(&str, &str)> {
     let (key, value) = line.split_once(':')?;
     Some((key.trim(), value.trim()))
@@ -149,7 +147,7 @@ mod test {
 
     use pretty_assertions::assert_eq;
 
-    /// What libGDX itself writes: spaced values, indented properties, extra keys.
+    /// libGDX itself: spaced values, indented properties, extra keys.
     const LIBGDX: &str = "sheet.png
 size: 128, 32
 format: RGBA8888
@@ -164,7 +162,7 @@ tile007
     /// What the gdx-texture-packer-gui writes.
     const COMPACT: &str = "sheet.png\nsize:128,32\nrepeat:none\ntile007\nbounds:92,2,16,16\n";
 
-    /// libGDX before 1.9.11, where position and size were separate.
+    /// libGDX before 1.9.11.
     const LEGACY: &str = "sheet.png
 size: 128, 32
 tile007

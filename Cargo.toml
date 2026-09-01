@@ -19,9 +19,11 @@ expect_used = "deny"
 panic = "deny"
 
 [features]
-default = ["sprite"]
+default = ["sprite", "ui"]
 # Enables `LibGdxAtlasAsset::sprite`, pulling in `bevy_sprite`.
 sprite = ["dep:bevy_sprite"]
+# Enables `LibGdxAtlasAsset::image_node`, pulling in `bevy_ui`.
+ui = ["dep:bevy_ui"]
 
 [dependencies]
 bevy_asset = { version = "0.19", default-features = false }
@@ -31,6 +33,7 @@ bevy_platform = { version = "0.19", default-features = false }
 bevy_math = { version = "0.19", default-features = false }
 bevy_app = { version = "0.19", default-features = false, features = ["bevy_reflect"] }
 bevy_sprite = { version = "0.19", default-features = false, optional = true }
+bevy_ui = { version = "0.19", default-features = false, optional = true }
 thiserror = "2.0"
 
 [dev-dependencies]
@@ -39,4 +42,4 @@ bevy = "0.19"
 
 [[example]]
 name = "animation"
-required-features = ["sprite"]
+required-features = ["sprite", "ui"]

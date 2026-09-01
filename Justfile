@@ -13,10 +13,10 @@ build:
     cargo b --all-targets
 
 check:
-    cargo clippy --all-targets -- -Dwarnings
+    cargo clippy --all-targets --all-features -- -Dwarnings
 
 test:
-    cargo test
+    cargo test --all-features
 
 doc:
     cargo doc --all-features --no-deps --document-private-items --keep-going

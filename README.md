@@ -47,6 +47,14 @@ let texture_atlas: Option<TextureAtlas> = atlas.texture_atlas("tile007");
 
 // frames of an animation, in name order ("hero_2" before "hero_10")
 let frames: Vec<usize> = atlas.frames("hero_");
+
+// UI
+commands.spawn(atlas.image_node("tile007").unwrap());
+
+// retarget an existing Sprite or ImageNode
+if !atlas.apply(&mut sprite.texture_atlas, "tile008") {
+    warn!("no such region");
+}
 ```
 
 > [!WARNING]
@@ -54,9 +62,9 @@ let frames: Vec<usize> = atlas.frames("hero_");
 > regions in, which is neither name order nor stable across repacks. Use `frames()`
 > to drive an animation.
 
-`sprite()` sits behind the default-on `sprite` feature, which pulls in `bevy_sprite`.
-Disable it with `default-features = false` if you only need `index()`, `texture_atlas()`
-and `names()`.
+`sprite()` and `image_node()` sit behind the default-on `sprite` and `ui` features, which
+pull in `bevy_sprite` and `bevy_ui`. Turn either off with `default-features = false`;
+`index()`, `texture_atlas()`, `frames()` and `apply()` need neither.
 
 <img src="animated_spritesheet_example.webp" width="800" height="450" alt="Animated spritesheet example" />
 

@@ -79,6 +79,17 @@ fn setup(
         },
     ));
 
+    // The same atlas region drawn into UI instead of the world.
+    commands.spawn((
+        animation_sheet.image_node("tile012").unwrap(),
+        Node {
+            width: Val::Px(64.),
+            height: Val::Px(64.),
+            margin: UiRect::all(Val::Px(8.)),
+            ..default()
+        },
+    ));
+
     let mut projection = OrthographicProjection::default_2d();
     projection.scaling_mode = bevy::camera::ScalingMode::Fixed {
         width: 16.,
