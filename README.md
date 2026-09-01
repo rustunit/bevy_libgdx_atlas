@@ -92,7 +92,7 @@ pull in `bevy_sprite` and `bevy_ui`. Turn either off with `default-features = fa
 
 |bevy|crate|
 |-|-|
-|0.19|0.7,main|
+|0.19|0.8,0.7,main|
 |0.18|0.6|
 |0.17|0.5|
 |0.16|0.4|

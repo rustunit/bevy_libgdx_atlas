@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.8.0] - 2026-09-01
+
 ### Added
 * `LibGdxAtlasAsset::index`, `::texture_atlas` and `::names` to look regions up by their atlas name
 * `LibGdxAtlasAsset::sprite` returning a ready-to-spawn `Sprite`, behind the new default-on `sprite` feature
