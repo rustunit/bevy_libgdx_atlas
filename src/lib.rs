@@ -18,20 +18,8 @@
 //!
 //! Now when you load files with the `.libgdx.atlas` extension through the asset server, or even `bevy_asset_loader`, they will load as a [`LibGdxAtlasAsset`] which you can then use.
 //!
-//! Regions are addressed by the name they carry in the atlas file:
-//!
-//! ```no_run
-//! # use bevy::prelude::*;
-//! # use bevy_libgdx_atlas::LibGdxAtlasAsset;
-//! # #[cfg(feature = "sprite")]
-//! # fn spawn(commands: &mut Commands, atlas: &LibGdxAtlasAsset) {
-//! commands.spawn(atlas.sprite("tile007").unwrap());
-//! # }
-//! ```
-//!
-//! See [`LibGdxAtlasAsset::sprite`], [`LibGdxAtlasAsset::texture_atlas`] and
-//! [`LibGdxAtlasAsset::index`]. `sprite` lives behind the default-on `sprite` feature,
-//! which pulls in `bevy_sprite`; the others are always available.
+//! Regions are addressed by name: see [`LibGdxAtlasAsset::sprite`] (default-on `sprite`
+//! feature), [`LibGdxAtlasAsset::texture_atlas`] and [`LibGdxAtlasAsset::frames`].
 
 mod assetformat;
 mod error;
@@ -64,34 +52,18 @@ pub struct LibGdxAtlasAsset {
     /// The texture atlas layout.
     pub atlas: Handle<TextureAtlasLayout>,
     /// The map of the original file names to indices of the texture atlas.
+    ///
+    /// Indices are in packer order, not name order: use [`Self::frames`] for animations.
     pub files: HashMap<String, usize>,
 }
 
 impl LibGdxAtlasAsset {
-    /// Index of the region `name` inside [`Self::atlas`], or `None` if the atlas
-    /// contains no such region.
-    ///
-    /// `name` is the region name as written in the `.libgdx.atlas` file, which is
-    /// usually the packed file's name without its extension (`"tile007"`).
+    /// Index of the region `name` inside [`Self::atlas`].
     pub fn index(&self, name: &str) -> Option<usize> {
         self.files.get(name).copied()
     }
 
-    /// [`TextureAtlas`] selecting the region `name`, ready to assign to
-    /// [`Sprite::texture_atlas`](https://docs.rs/bevy/latest/bevy/sprite/struct.Sprite.html#structfield.texture_atlas)
-    /// or [`ImageNode::texture_atlas`](https://docs.rs/bevy/latest/bevy/ui/widget/struct.ImageNode.html#structfield.texture_atlas).
-    ///
-    /// ```no_run
-    /// # use bevy::prelude::*;
-    /// # use bevy_libgdx_atlas::LibGdxAtlasAsset;
-    /// # fn spawn(commands: &mut Commands, atlas: &LibGdxAtlasAsset) {
-    /// commands.spawn(Sprite {
-    ///     image: atlas.image.clone(),
-    ///     texture_atlas: atlas.texture_atlas("tile007"),
-    ///     ..default()
-    /// });
-    /// # }
-    /// ```
+    /// [`TextureAtlas`] selecting the region `name`, for a `Sprite` or `ImageNode`.
     pub fn texture_atlas(&self, name: &str) -> Option<TextureAtlas> {
         Some(TextureAtlas {
             layout: self.atlas.clone(),
@@ -99,7 +71,7 @@ impl LibGdxAtlasAsset {
         })
     }
 
-    /// A ready-to-spawn [`Sprite`] showing the region `name`.
+    /// Ready-to-spawn [`Sprite`] showing the region `name`.
     ///
     /// ```no_run
     /// # use bevy::prelude::*;
@@ -116,11 +88,79 @@ impl LibGdxAtlasAsset {
         ))
     }
 
-    /// The names of all regions in this atlas.
-    ///
-    /// The order is unspecified: [`Self::files`] is a hash map, and the indices behind
-    /// it follow the order the packer wrote the regions in, not the region names.
+    /// All region names, in unspecified order.
     pub fn names(&self) -> impl Iterator<Item = &str> {
         self.files.keys().map(String::as_str)
+    }
+
+    /// Indices of the regions named `prefix*`, ordered by name: an animation's frames.
+    ///
+    /// `""` yields the whole atlas. Unlike [`Self::files`], the order is not packer order.
+    pub fn frames(&self, prefix: &str) -> Vec<usize> {
+        let mut regions: Vec<(&str, usize)> = self
+            .files
+            .iter()
+            .filter(|(name, _)| name.starts_with(prefix))
+            .map(|(name, index)| (name.as_str(), *index))
+            .collect();
+
+        regions.sort_by(|(a, _), (b, _)| frame_key(a).cmp(&frame_key(b)).then(a.cmp(b)));
+
+        regions.into_iter().map(|(_, index)| index).collect()
+    }
+}
+
+/// Compares the trailing frame number numerically: plain ordering puts `hero_10` first.
+fn frame_key(name: &str) -> (&str, u64) {
+    let head = name.trim_end_matches(|c: char| c.is_ascii_digit());
+    (head, name[head.len()..].parse().unwrap_or_default())
+}
+
+#[allow(clippy::unwrap_used)]
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    use pretty_assertions::assert_eq;
+
+    /// Region names mapped to indices in packer order, i.e. deliberately not name order.
+    fn atlas(regions: &[(&str, usize)]) -> LibGdxAtlasAsset {
+        LibGdxAtlasAsset {
+            image: Handle::default(),
+            atlas: Handle::default(),
+            files: regions
+                .iter()
+                .map(|(name, index)| ((*name).to_string(), *index))
+                .collect(),
+        }
+    }
+
+    #[test]
+    fn test_frames_are_in_name_order_not_packer_order() {
+        let atlas = atlas(&[("hero_10", 0), ("hero_1", 1), ("hero_2", 2)]);
+
+        assert_eq!(atlas.frames("hero"), vec![1, 2, 0]);
+    }
+
+    #[test]
+    fn test_frames_filters_by_prefix() {
+        let atlas = atlas(&[("run_1", 0), ("idle_1", 1), ("run_2", 2)]);
+
+        assert_eq!(atlas.frames("run"), vec![0, 2]);
+        assert_eq!(atlas.frames(""), vec![1, 0, 2]);
+        assert_eq!(atlas.frames("missing"), Vec::<usize>::new());
+    }
+
+    #[test]
+    fn test_frames_sorts_padded_and_unpadded_numbers() {
+        let atlas = atlas(&[
+            ("tile010", 0),
+            ("tile002", 1),
+            ("hero_10", 2),
+            ("hero_2", 3),
+        ]);
+
+        assert_eq!(atlas.frames("tile"), vec![1, 0]);
+        assert_eq!(atlas.frames("hero"), vec![3, 2]);
     }
 }

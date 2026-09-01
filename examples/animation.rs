@@ -1,3 +1,5 @@
+#![allow(clippy::unwrap_used, reason = "keeps the example terse")]
+
 use bevy::{prelude::*, window::WindowResolution};
 use bevy_libgdx_atlas::*;
 
@@ -70,8 +72,9 @@ fn setup(
     commands.spawn((
         animation_sheet.sprite("tile007").unwrap(),
         AnimationConfig {
-            first_index: 0,
-            last_index: animation_sheet.files.len().saturating_sub(1),
+            // In name order, unlike the raw indices in `files`.
+            frames: animation_sheet.frames("tile"),
+            current: 0,
             timer: Timer::from_seconds(0.1, TimerMode::Repeating),
         },
     ));
@@ -86,8 +89,9 @@ fn setup(
 
 #[derive(Component)]
 struct AnimationConfig {
-    first_index: usize,
-    last_index: usize,
+    frames: Vec<usize>,
+    /// Position within `frames`, not an atlas index.
+    current: usize,
     timer: Timer,
 }
 
@@ -98,18 +102,19 @@ fn animate_sheet(time: Res<Time>, mut query: Query<(&mut AnimationConfig, &mut S
         };
         config.timer.tick(time.delta());
 
-        // Early return if it isn't time for the next
-        // step or frame in the animation.
         if !config.timer.just_finished() {
-            return;
+            continue;
         }
 
-        // Restart the animation to the first index if
-        // it has reached the last index.
-        texture_atlas.index = if texture_atlas.index == config.last_index {
-            config.first_index
-        } else {
-            texture_atlas.index + 1
-        };
+        // Wraps back to the first frame at the end.
+        config.current = config
+            .current
+            .saturating_add(1)
+            .checked_rem(config.frames.len())
+            .unwrap_or_default();
+
+        if let Some(index) = config.frames.get(config.current) {
+            texture_atlas.index = *index;
+        }
     }
 }

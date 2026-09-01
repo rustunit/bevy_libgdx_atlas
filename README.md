@@ -41,7 +41,15 @@ commands.spawn(atlas.sprite("tile007").unwrap());
 // or just the pieces
 let index: Option<usize> = atlas.index("tile007");
 let texture_atlas: Option<TextureAtlas> = atlas.texture_atlas("tile007");
+
+// frames of an animation, in name order ("hero_2" before "hero_10")
+let frames: Vec<usize> = atlas.frames("hero_");
 ```
+
+> [!WARNING]
+> The raw indices in `LibGdxAtlasAsset::files` follow the order the packer wrote the
+> regions in, which is neither name order nor stable across repacks. Use `frames()`
+> to drive an animation.
 
 `sprite()` sits behind the default-on `sprite` feature, which pulls in `bevy_sprite`.
 Disable it with `default-features = false` if you only need `index()`, `texture_atlas()`
