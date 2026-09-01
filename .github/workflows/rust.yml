@@ -45,6 +45,21 @@ jobs:
       - name: Build
         run: just build
 
+  wasm:
+    name: Wasm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: leafwing-studios/cargo-cache@v2
+        with:
+          sweep-cache: true
+      - uses: extractions/setup-just@v1
+      - name: Check Wasm
+        run: just wasm
+
   test:
     name: Test
     strategy:

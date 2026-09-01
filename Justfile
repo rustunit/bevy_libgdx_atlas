@@ -7,13 +7,16 @@ alias fmt := format
 default:
     just --list
 
-ci: build check test doc format
+ci: build check wasm test doc format
 
 build:
     cargo b --all-targets
 
 check:
     cargo clippy --all-targets --all-features -- -Dwarnings
+
+wasm:
+    cargo clippy --target wasm32-unknown-unknown --all-features -- -Dwarnings
 
 test:
     cargo test --all-features
