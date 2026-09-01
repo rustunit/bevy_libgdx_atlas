@@ -35,6 +35,15 @@ pub enum LibGdxAtlasAssetError {
     #[error("parse Int error: {0}")]
     ParsingInt(#[from] std::num::ParseIntError),
 
+    /// A region is stored rotated, which a Bevy
+    /// `TextureAtlasLayout` cannot express.
+    #[error("rotated region '{0}': disable rotation when packing")]
+    RotatedRegion(String),
+
+    /// The atlas spans more than one image.
+    #[error("multi page atlas: pack into a single image")]
+    MultiplePages,
+
     /// An error that can occur if there is
     /// trouble loading the image asset of
     /// an atlas.

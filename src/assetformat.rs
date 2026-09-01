@@ -1,6 +1,5 @@
-use std::path::PathBuf;
+use std::{iter::Peekable, path::PathBuf};
 
-use bevy_internal::prelude::Rect;
 use bevy_math::prelude::*;
 
 use crate::LibGdxAtlasAssetError;
@@ -8,114 +7,135 @@ use crate::LibGdxAtlasAssetError;
 #[derive(Debug)]
 pub struct AssetFileFrame {
     pub filename: String,
-    pub bounds: Rect,
+    pub bounds: URect,
 }
 
 #[derive(Debug)]
 pub struct AssetFile {
     pub file: PathBuf,
-    pub size: IVec2,
+    pub size: UVec2,
     pub files: Vec<AssetFileFrame>,
 }
 
 impl AssetFile {
     pub fn new(content: String) -> Result<Self, LibGdxAtlasAssetError> {
-        let mut lines = content.lines();
+        // Whitespace is insignificant: libGDX indents region properties and writes
+        // `size: 1, 2`, while other packers write neither.
+        let mut lines = content.lines().map(str::trim).peekable();
+
         let file: PathBuf = lines
             .next()
-            .ok_or(LibGdxAtlasAssetError::ParsingError(
-                "not found: filename".into(),
-            ))?
-            .into();
-        let size: String = lines
-            .next()
-            .ok_or(LibGdxAtlasAssetError::ParsingError(
-                "not found: size".into(),
-            ))?
-            .into();
-        let _repeat: String = lines
-            .next()
-            .ok_or(LibGdxAtlasAssetError::ParsingError(
-                "not found: repeat".into(),
-            ))?
+            .filter(|line| !line.is_empty())
+            .ok_or_else(|| parsing("not found: filename"))?
             .into();
 
-        let size = parse_size(size)?;
+        // Header. `format`, `filter`, `pma`, ... don't affect the layout.
+        let mut size = None;
+        while let Some(line) = lines.peek().copied() {
+            let Some((key, value)) = property(line) else {
+                break;
+            };
+            if key == "size" {
+                size = Some(parse_uvec2(value)?);
+            }
+            lines.next();
+        }
+        let size = size.ok_or_else(|| parsing("not found: size"))?;
 
-        let mut files: Vec<AssetFileFrame> = Vec::new();
+        let mut files = Vec::new();
+        while let Some(name) = lines.next() {
+            if name.is_empty() {
+                // A blank line starts the next page, and we can hold only one image.
+                if lines.any(|line| !line.is_empty()) {
+                    return Err(LibGdxAtlasAssetError::MultiplePages);
+                }
+                break;
+            }
 
-        while let Some(filename) = lines.next() {
-            let bounds: String = lines
-                .next()
-                .ok_or(LibGdxAtlasAssetError::ParsingError(
-                    "not found: bounds".into(),
-                ))?
-                .into();
-
-            let bounds = parse_bounds(bounds)?;
-
-            files.push(AssetFileFrame {
-                filename: filename.into(),
-                bounds,
-            })
+            files.push(parse_region(name, &mut lines)?);
         }
 
         Ok(Self { file, size, files })
     }
 }
 
-fn parse_size(size: String) -> Result<IVec2, LibGdxAtlasAssetError> {
-    if !size.starts_with("size:") {
-        return Err(LibGdxAtlasAssetError::ParsingError(
-            "expected: 'size:'".into(),
-        ));
+fn parse_region<'a>(
+    name: &str,
+    lines: &mut Peekable<impl Iterator<Item = &'a str>>,
+) -> Result<AssetFileFrame, LibGdxAtlasAssetError> {
+    let (mut bounds, mut xy, mut size) = (None, None, None);
+
+    while let Some(line) = lines.peek().copied() {
+        let Some((key, value)) = property(line) else {
+            break;
+        };
+
+        match key {
+            "bounds" => bounds = Some(parse_urect(value)?),
+            // libGDX before 1.9.11 wrote position and size separately.
+            "xy" => xy = Some(parse_uvec2(value)?),
+            "size" => size = Some(parse_uvec2(value)?),
+            "rotate" if !matches!(value, "false" | "0") => {
+                return Err(LibGdxAtlasAssetError::RotatedRegion(name.to_string()));
+            }
+            // `index`, `offsets`, `orig`, `split`, ... don't affect the layout.
+            _ => {}
+        }
+
+        lines.next();
     }
 
-    let colon = size.find(':').ok_or(LibGdxAtlasAssetError::ParsingError(
-        "expected symbol: ':'".to_string(),
-    ))?;
+    let bounds = match (bounds, xy, size) {
+        (Some(bounds), _, _) => bounds,
+        (None, Some(xy), Some(size)) => URect::from_corners(xy, xy.saturating_add(size)),
+        _ => return Err(parsing(format!("not found: bounds of region '{name}'"))),
+    };
 
-    let comma = size.find(',').ok_or(LibGdxAtlasAssetError::ParsingError(
-        "expected symbol: 'x'".to_string(),
-    ))?;
-
-    let w = size[colon.saturating_add(1)..comma].parse::<u32>()?;
-    let h = size[comma.saturating_add(1)..].parse::<u32>()?;
-
-    Ok(IVec2::new(w as i32, h as i32))
+    Ok(AssetFileFrame {
+        filename: name.to_string(),
+        bounds,
+    })
 }
 
-fn parse_bounds(size: String) -> Result<Rect, LibGdxAtlasAssetError> {
-    if !size.starts_with("bounds:") {
-        return Err(LibGdxAtlasAssetError::ParsingError(
-            "expected: 'bounds:'".to_string(),
-        ));
+/// Splits a `key: value` line. Region names carry no colon, so this also tells a
+/// property apart from the name starting the next region.
+fn property(line: &str) -> Option<(&str, &str)> {
+    let (key, value) = line.split_once(':')?;
+    Some((key.trim(), value.trim()))
+}
+
+fn parse_uvec2(value: &str) -> Result<UVec2, LibGdxAtlasAssetError> {
+    let [x, y] = parse_numbers(value)?;
+    Ok(UVec2::new(x, y))
+}
+
+fn parse_urect(value: &str) -> Result<URect, LibGdxAtlasAssetError> {
+    let [x, y, width, height] = parse_numbers(value)?;
+    Ok(URect::new(
+        x,
+        y,
+        x.saturating_add(width),
+        y.saturating_add(height),
+    ))
+}
+
+fn parse_numbers<const N: usize>(value: &str) -> Result<[u32; N], LibGdxAtlasAssetError> {
+    let mut numbers = [0; N];
+    let mut values = value.split(',');
+
+    for number in &mut numbers {
+        *number = values
+            .next()
+            .ok_or_else(|| parsing(format!("expected {N} numbers, got '{value}'")))?
+            .trim()
+            .parse()?;
     }
 
-    let colon = size.find(':').ok_or(LibGdxAtlasAssetError::ParsingError(
-        "expected symbol: ':'".to_string(),
-    ))?;
+    Ok(numbers)
+}
 
-    let mut values = size[colon.saturating_add(1)..].split(',');
-
-    let x = values
-        .next()
-        .ok_or(LibGdxAtlasAssetError::ParsingError("expected x".into()))?
-        .parse::<u32>()?;
-    let y = values
-        .next()
-        .ok_or(LibGdxAtlasAssetError::ParsingError("expected y".into()))?
-        .parse::<u32>()?;
-    let x2 = x + values
-        .next()
-        .ok_or(LibGdxAtlasAssetError::ParsingError("expected w".into()))?
-        .parse::<u32>()?;
-    let y2 = y + values
-        .next()
-        .ok_or(LibGdxAtlasAssetError::ParsingError("expected h".into()))?
-        .parse::<u32>()?;
-
-    Ok(Rect::new(x as f32, y as f32, x2 as f32, y2 as f32))
+fn parsing(message: impl Into<String>) -> LibGdxAtlasAssetError {
+    LibGdxAtlasAssetError::ParsingError(message.into())
 }
 
 #[allow(clippy::unwrap_used)]
@@ -125,15 +145,115 @@ mod test {
 
     use pretty_assertions::assert_eq;
 
-    #[test]
-    fn test_parse_size() {
-        let size = parse_size("size:12,14".into()).unwrap();
-        assert_eq!(size, IVec2::new(12, 14));
+    /// What libGDX itself writes: spaced values, indented properties, extra keys.
+    const LIBGDX: &str = "sheet.png
+size: 128, 32
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+tile007
+  rotate: false
+  bounds: 92, 2, 16, 16
+  index: -1
+";
+
+    /// What the gdx-texture-packer-gui writes.
+    const COMPACT: &str = "sheet.png\nsize:128,32\nrepeat:none\ntile007\nbounds:92,2,16,16\n";
+
+    /// libGDX before 1.9.11, where position and size were separate.
+    const LEGACY: &str = "sheet.png
+size: 128, 32
+tile007
+  xy: 92, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+";
+
+    fn parse(content: &str) -> AssetFile {
+        AssetFile::new(content.to_string()).unwrap()
     }
 
     #[test]
-    fn test_parse_bounds() {
-        let size = parse_bounds("bounds:1,2,10,20".into()).unwrap();
-        assert_eq!(size, Rect::new(1., 2., 11., 22.));
+    fn test_parses_every_dialect_the_same() {
+        for content in [LIBGDX, COMPACT, LEGACY] {
+            let atlas = parse(content);
+
+            assert_eq!(atlas.file, PathBuf::from("sheet.png"));
+            assert_eq!(atlas.size, UVec2::new(128, 32));
+            assert_eq!(atlas.files.len(), 1);
+            assert_eq!(atlas.files[0].filename, "tile007");
+            assert_eq!(atlas.files[0].bounds, URect::new(92, 2, 108, 18));
+        }
+    }
+
+    #[test]
+    fn test_parses_multiple_regions() {
+        let atlas =
+            parse("sheet.png\nsize:4,4\nrepeat:none\na\nbounds:0,0,1,1\nb\nbounds:1,0,1,1\n");
+
+        assert_eq!(atlas.files.len(), 2);
+        assert_eq!(atlas.files[1].filename, "b");
+    }
+
+    #[test]
+    fn test_ignores_trailing_blank_lines() {
+        assert_eq!(parse(&format!("{COMPACT}\n\n")).files.len(), 1);
+    }
+
+    #[test]
+    fn test_rejects_rotated_regions() {
+        let error = AssetFile::new("sheet.png\nsize:4,4\na\nrotate: true\nbounds:0,0,1,1\n".into());
+
+        assert!(matches!(
+            error,
+            Err(LibGdxAtlasAssetError::RotatedRegion(name)) if name == "a"
+        ));
+    }
+
+    #[test]
+    fn test_rejects_multiple_pages() {
+        let error = AssetFile::new(format!("{COMPACT}\n{COMPACT}"));
+
+        assert!(matches!(error, Err(LibGdxAtlasAssetError::MultiplePages)));
+    }
+
+    #[test]
+    fn test_reports_a_region_without_bounds() {
+        let error = AssetFile::new("sheet.png\nsize:4,4\na\nindex:-1\n".into());
+
+        assert!(matches!(
+            error,
+            Err(LibGdxAtlasAssetError::ParsingError(message)) if message.contains('a')
+        ));
+    }
+
+    #[test]
+    fn test_reports_a_missing_size() {
+        let error = AssetFile::new("sheet.png\nrepeat:none\n".into());
+
+        assert!(matches!(
+            error,
+            Err(LibGdxAtlasAssetError::ParsingError(message)) if message.contains("size")
+        ));
+    }
+
+    #[test]
+    fn test_parses_the_bundled_example_asset() {
+        let atlas = parse(include_str!("../assets/animation_sheet.libgdx.atlas"));
+
+        assert_eq!(atlas.files.len(), 7);
+    }
+
+    #[test]
+    fn test_parse_uvec2() {
+        assert_eq!(parse_uvec2("12,14").unwrap(), UVec2::new(12, 14));
+        assert_eq!(parse_uvec2(" 12 , 14 ").unwrap(), UVec2::new(12, 14));
+        assert!(parse_uvec2("12").is_err());
+    }
+
+    #[test]
+    fn test_parse_urect() {
+        assert_eq!(parse_urect("1,2,10,20").unwrap(), URect::new(1, 2, 11, 22));
     }
 }

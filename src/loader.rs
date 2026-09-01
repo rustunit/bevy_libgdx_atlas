@@ -46,11 +46,11 @@ impl AssetLoader for LibGdxAtlasAssetLoader {
                 "failed to load image asset, does it exist".to_string(),
             ))?;
 
-        let mut layout = TextureAtlasLayout::new_empty(asset.size.as_uvec2());
+        let mut layout = TextureAtlasLayout::new_empty(asset.size);
         let mut files = HashMap::new();
 
         for frame in asset.files {
-            let id = layout.add_texture(frame.bounds.as_urect());
+            let id = layout.add_texture(frame.bounds);
             files.insert(frame.filename, id);
         }
 

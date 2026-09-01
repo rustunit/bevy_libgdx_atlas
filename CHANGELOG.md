@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `LibGdxAtlasAsset::sprite` returning a ready-to-spawn `Sprite`, behind the new default-on `sprite` feature
 * `LibGdxAtlasAsset::frames` returning an animation's frame indices in name order, with trailing numbers sorted numerically (`hero_2` before `hero_10`)
 
+### Fixed
+* parse whitespace, extra keys and the pre-1.9.11 `xy:` + `size:` format, as written by libGDX itself
+* report rotated regions and multi page atlases as errors instead of failing to parse
+
 ## [0.7.0] - 2026-08-18
 
 ### Changed

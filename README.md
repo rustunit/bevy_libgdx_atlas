@@ -16,6 +16,9 @@ Read the article with more context around sprite atlases in Bevy on the [rustuni
 
 Pack your spritesheet using https://github.com/crashinvaders/gdx-texture-packer-gui
 
+Both the current and the pre-1.9.11 atlas format are supported. Rotation must be off and
+the atlas must fit a single page, since a Bevy `TextureAtlasLayout` cannot express either.
+
 <img src="texture_packer_example.webp" width="800" height="450" alt="Texture packer example" />
 
 Add the `LibGdxAssetPlugin` to your app:
