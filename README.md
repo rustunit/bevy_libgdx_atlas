@@ -32,6 +32,21 @@ app.add_plugins(LibGdxAssetPlugin);
 
 Now when you load files with the `.libgdx.atlas` extension through the asset server, or even `bevy_asset_loader`, they will load as a `LibGdxAtlasAsset` which you can then use.
 
+Regions are addressed by the name they carry in the atlas file:
+
+```rust
+// ready-to-spawn Sprite
+commands.spawn(atlas.sprite("tile007").unwrap());
+
+// or just the pieces
+let index: Option<usize> = atlas.index("tile007");
+let texture_atlas: Option<TextureAtlas> = atlas.texture_atlas("tile007");
+```
+
+`sprite()` sits behind the default-on `sprite` feature, which pulls in `bevy_sprite`.
+Disable it with `default-features = false` if you only need `index()`, `texture_atlas()`
+and `names()`.
+
 <img src="animated_spritesheet_example.webp" width="800" height="450" alt="Animated spritesheet example" />
 
 > [!TIP]

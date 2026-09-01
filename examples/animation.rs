@@ -68,14 +68,7 @@ fn setup(
     };
 
     commands.spawn((
-        Sprite {
-            image: animation_sheet.image.clone(),
-            texture_atlas: Some(TextureAtlas {
-                layout: animation_sheet.atlas.clone(),
-                index: 0,
-            }),
-            ..default()
-        },
+        animation_sheet.sprite("tile007").unwrap(),
         AnimationConfig {
             first_index: 0,
             last_index: animation_sheet.files.len().saturating_sub(1),
